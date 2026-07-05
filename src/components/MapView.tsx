@@ -3,6 +3,7 @@ import type { LatLngExpression } from 'leaflet';
 import { LOCATIONS, LOCATION_BY_ID } from '../data/locations';
 import { ITINERARIES } from '../data/itineraries';
 import { useFilters } from '../context/FilterContext';
+import PlaybackControls from './PlaybackControls';
 import type { ItineraryCharacter, LocationStatus } from '../types';
 
 /** Path colour per itinerary character. */
@@ -129,6 +130,8 @@ export default function MapView() {
           );
         })}
       </MapContainer>
+
+      <PlaybackControls />
 
       {/* ——— Symbology legend ——— */}
       <div className="absolute bottom-4 left-3 z-[1000] bg-slate-900/90 border border-slate-700 rounded-lg px-3 py-2 text-[11px] space-y-1.5 max-w-[240px]">

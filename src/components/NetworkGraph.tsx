@@ -1,5 +1,6 @@
 import { useMemo, useRef, useState, useCallback, useEffect } from 'react';
 import ForceGraph2D from 'react-force-graph-2d';
+import { forceX, forceY } from 'd3';
 import { CHARACTERS, CHARACTER_BY_ID } from '../data/characters';
 import { INTERACTIONS } from '../data/interactions';
 import { ALIGNMENT_COLORS, GROUP_OF_ALIGNMENT, useFilters } from '../context/FilterContext';
@@ -38,7 +39,7 @@ const APPEARANCES: Record<string, number[]> = (() => {
 })();
 
 export default function NetworkGraph() {
-  const { bookRange, enabledGroups, setSelection } = useFilters();
+  const { bookRange, enabledGroups, setSelection, highlight } = useFilters();
   const { ref, width, height } = useElementSize<HTMLDivElement>();
   const [hoverNode, setHoverNode] = useState<GraphNode | null>(null);
   const mousePos = useRef({ x: 0, y: 0 });
@@ -105,27 +106,49 @@ export default function NetworkGraph() {
   }, [filteredInteractions]);
 
   useEffect(() => {
-    fgRef.current?.d3Force('charge')?.strength(-140);
-    // Re-frame the camera once the layout settles, so filter changes and
-    // playback steps never strand nodes outside the viewport. Timing tuned
-    // to fit within one playback step (settle ~500ms + 500ms ease).
-    const t = setTimeout(() => fgRef.current?.zoomToFit(500, 70), 500);
-    return () => clearTimeout(t);
+    const fg = fgRef.current;
+    if (!fg) return;
+    fg.d3Force('charge')?.strength(-140);
+    // Gentle centering gravity: without it, disconnected mini-clusters repel
+    // away from the main component forever, inflating the bounding box and
+    // forcing the camera to zoom far out during playback.
+    fg.d3Force('x', forceX(0).strength(0.08));
+    fg.d3Force('y', forceY(0).strength(0.08));
+    // Two camera fits per data change: an early one so the view tracks the
+    // new cast immediately, and a late one after the layout has settled —
+    // both complete within a single 1.9s playback step.
+    const t1 = setTimeout(() => fgRef.current?.zoomToFit(400, 80), 350);
+    const t2 = setTimeout(() => fgRef.current?.zoomToFit(400, 80), 1250);
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+    };
   }, [graphData]);
 
+  // Clicking a name in the Text reader flies the camera to that node.
+  useEffect(() => {
+    if (!highlight?.focus) return;
+    const node = nodeCache.current.get(highlight.id);
+    if (node && node.x !== undefined) {
+      fgRef.current?.centerAt(node.x, node.y, 700);
+    }
+  }, [highlight]);
+
   const nodeRadius = (n: GraphNode) => 3 + Math.sqrt(n.degree) * 1.35;
+
+  const highlightId = highlight?.id ?? null;
 
   const drawNode = useCallback((node: any, ctx: CanvasRenderingContext2D, scale: number) => {
     const n = node as GraphNode;
     const r = nodeRadius(n);
     const color = ALIGNMENT_COLORS[n.char.alignment];
+    const dimmed = highlightId !== null && n.id !== highlightId;
 
+    ctx.globalAlpha = dimmed ? 0.14 : 0.9;
     ctx.beginPath();
     ctx.arc(node.x, node.y, r, 0, 2 * Math.PI);
     ctx.fillStyle = color;
-    ctx.globalAlpha = 0.9;
     ctx.fill();
-    ctx.globalAlpha = 1;
 
     // Aggregate/collective nodes get a dashed halo ring.
     if (n.char.group_size > 1) {
@@ -136,6 +159,20 @@ export default function NetworkGraph() {
       ctx.lineWidth = 0.8;
       ctx.stroke();
       ctx.setLineDash([]);
+    }
+
+    // Spotlight rings for the character highlighted from the Text reader.
+    if (n.id === highlightId) {
+      ctx.beginPath();
+      ctx.arc(node.x, node.y, r + 3.5, 0, 2 * Math.PI);
+      ctx.strokeStyle = '#f8fafc';
+      ctx.lineWidth = 1.6;
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(node.x, node.y, r + 7, 0, 2 * Math.PI);
+      ctx.strokeStyle = 'rgba(52, 211, 153, 0.75)';
+      ctx.lineWidth = 1.2;
+      ctx.stroke();
     }
 
     if (scale > 0.9) {
@@ -151,7 +188,8 @@ export default function NetworkGraph() {
       ctx.fillStyle = '#e2e8f0';
       ctx.fillText(n.char.name, node.x, node.y + r + 2);
     }
-  }, []);
+    ctx.globalAlpha = 1;
+  }, [highlightId]);
 
   const hoverConnections = useMemo(() => {
     if (!hoverNode) return [];
@@ -192,7 +230,16 @@ export default function NetworkGraph() {
             ctx.fill();
           }}
           linkWidth={(l: any) => 0.7 + Math.min((l as GraphLink).weight * 0.3, 7)}
-          linkColor={(l: any) => ((l as GraphLink).nested ? '#7c5f3f' : '#475569')}
+          linkColor={(l: any) => {
+            const link = l as GraphLink;
+            if (highlightId) {
+              const s = typeof link.source === 'object' ? link.source.id : link.source;
+              const t = typeof link.target === 'object' ? link.target.id : link.target;
+              if (s !== highlightId && t !== highlightId) return 'rgba(51, 65, 85, 0.12)';
+              return link.nested ? '#b08f5c' : '#94a3b8';
+            }
+            return link.nested ? '#7c5f3f' : '#475569';
+          }}
           linkLineDash={(l: any) => ((l as GraphLink).nested ? [4, 3] : null)}
           onNodeHover={(node: any) => setHoverNode((node as GraphNode) ?? null)}
           onNodeClick={(node: any) => setSelection({ kind: 'character', id: (node as GraphNode).id })}

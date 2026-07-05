@@ -1,8 +1,39 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { useFilters } from '../context/FilterContext';
+import { NAME_REGEX, NAME_TO_ID } from '../data/nameMap';
 
 /** In-memory cache: each book is fetched at most once per session. */
 const bookCache = new Map<number, string[]>();
+
+/** Character names become live links: hover spotlights the node in the
+ *  network view; click flies the camera to it. */
+function LinkedText({ text }: { text: string }) {
+  const { setHighlight } = useFilters();
+  const parts = text.split(NAME_REGEX);
+  return (
+    <>
+      {parts.map((part, idx): ReactNode => {
+        const id = NAME_TO_ID[part];
+        if (!id) return part;
+        return (
+          <span
+            key={idx}
+            role="button"
+            tabIndex={0}
+            className="text-emerald-300 border-b border-dotted border-emerald-500/50 cursor-pointer rounded-sm hover:text-emerald-200 hover:bg-emerald-900/30 transition-colors"
+            title="Hover: highlight in network · Click: fly to node"
+            onMouseEnter={() => setHighlight({ id, focus: false })}
+            onMouseLeave={() => setHighlight(null)}
+            onClick={() => setHighlight({ id, focus: true })}
+            onKeyDown={(e) => e.key === 'Enter' && setHighlight({ id, focus: true })}
+          >
+            {part}
+          </span>
+        );
+      })}
+    </>
+  );
+}
 
 /**
  * Full-text reader for the Samuel Butler translation (1900), served as
@@ -97,7 +128,7 @@ export default function TextReader() {
                   i === 0 ? 'drop-cap' : ''
                 }`}
               >
-                {p}
+                <LinkedText text={p} />
               </p>
             ))}
           </div>
@@ -105,6 +136,10 @@ export default function TextReader() {
 
         {/* Attribution & name key */}
         <div className="mt-8 pt-4 border-t border-slate-800 text-[11px] text-slate-500 leading-relaxed space-y-2">
+          <p>
+            <span className="text-emerald-400/80">Names are linked</span> — hover one to spotlight
+            that character in the network view; click to fly the camera to their node.
+          </p>
           <p>
             Translation: Samuel Butler (1900), via the{' '}
             <a

@@ -23,6 +23,14 @@ const STREAM_LABELS: Record<StreamKey, string> = {
   other: 'Hosts, shades & others',
 };
 
+/** One-word diegesis labels for Books 9–12 (full detail lives in the hover tooltip). */
+const DIEGESIS_SHORT: Record<number, string> = {
+  9: 'Cyclops',
+  10: 'Circe',
+  11: 'Nekyia',
+  12: 'Sirens',
+};
+
 /** Chronological frame location per book (for the dual-timeline strip). */
 function frameLabel(book: number): string {
   if (book <= 2) return 'Ithaca';
@@ -209,7 +217,7 @@ export default function StreamGraph() {
               ))}
               {FOCALIZATION.filter((r) => r.nested).map((r) => (
                 <text key={r.book} x={x(r.book)} y={28.5} textAnchor="middle" className="fill-sepia-200 text-[7.5px]">
-                  {r.nested!.diegetic.split(' · ')[0]}
+                  {DIEGESIS_SHORT[r.book]}
                 </text>
               ))}
               <text x={x(18.5)} y={28.5} textAnchor="middle" className="fill-slate-400 text-[8.5px]">
