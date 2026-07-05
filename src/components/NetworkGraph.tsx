@@ -4,6 +4,7 @@ import { CHARACTERS, CHARACTER_BY_ID } from '../data/characters';
 import { INTERACTIONS } from '../data/interactions';
 import { ALIGNMENT_COLORS, GROUP_OF_ALIGNMENT, useFilters } from '../context/FilterContext';
 import { useElementSize } from '../hooks/useElementSize';
+import PlaybackControls from './PlaybackControls';
 import type { Character, Interaction } from '../types';
 
 interface GraphNode {
@@ -105,9 +106,10 @@ export default function NetworkGraph() {
 
   useEffect(() => {
     fgRef.current?.d3Force('charge')?.strength(-140);
-    // Re-frame the camera once the layout settles, so filter changes never
-    // strand the remaining nodes outside the viewport.
-    const t = setTimeout(() => fgRef.current?.zoomToFit(400, 60), 600);
+    // Re-frame the camera once the layout settles, so filter changes and
+    // playback steps never strand nodes outside the viewport. Timing tuned
+    // to fit within one playback step (settle ~500ms + 500ms ease).
+    const t = setTimeout(() => fgRef.current?.zoomToFit(500, 70), 500);
     return () => clearTimeout(t);
   }, [graphData]);
 
@@ -201,9 +203,12 @@ export default function NetworkGraph() {
             setSelection({ kind: 'edge', a, b, interactions: link.interactions });
           }}
           cooldownTicks={120}
-          d3AlphaDecay={0.03}
+          d3AlphaDecay={0.035}
+          d3VelocityDecay={0.35}
         />
       )}
+
+      <PlaybackControls />
 
       {/* Legend */}
       <div className="absolute bottom-3 left-3 bg-slate-900/85 border border-slate-700 rounded-lg px-3 py-2 text-[11px] space-y-1 pointer-events-none max-w-[220px]">

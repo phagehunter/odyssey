@@ -93,7 +93,7 @@ export default function TextReader() {
             {paragraphs.map((p, i) => (
               <p
                 key={i}
-                className={`font-reading text-[17px] leading-[1.75] text-slate-200 ${
+                className={`font-reading text-[16px] leading-[1.8] text-slate-100 ${
                   i === 0 ? 'drop-cap' : ''
                 }`}
               >
