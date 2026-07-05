@@ -1,8 +1,10 @@
-import { CircleMarker, MapContainer, Polyline, Popup, TileLayer, Tooltip } from 'react-leaflet';
+import { useEffect } from 'react';
+import { CircleMarker, MapContainer, Polyline, Popup, TileLayer, Tooltip, useMap } from 'react-leaflet';
 import type { LatLngExpression } from 'leaflet';
 import { LOCATIONS, LOCATION_BY_ID } from '../data/locations';
 import { ITINERARIES } from '../data/itineraries';
 import { useFilters } from '../context/FilterContext';
+import { LAYOUT_EVENT, useElementSize } from '../hooks/useElementSize';
 import PlaybackControls from './PlaybackControls';
 import type { ItineraryCharacter, LocationStatus } from '../types';
 
@@ -19,6 +21,26 @@ export const ITINERARY_LABELS: Record<ItineraryCharacter, string> = {
   divine: 'Hermes / Divine Messengers',
 };
 
+/** Leaflet only listens to window resizes; when the reading panel is dragged
+ *  wider/narrower the map container changes size without one, so observe the
+ *  container directly (plus the app layout event) and keep the map's
+ *  internal dimensions in sync. */
+function MapResizeSync() {
+  const map = useMap();
+  useEffect(() => {
+    const container = map.getContainer();
+    const sync = () => map.invalidateSize();
+    const observer = new ResizeObserver(sync);
+    observer.observe(container);
+    window.addEventListener(LAYOUT_EVENT, sync);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener(LAYOUT_EVENT, sync);
+    };
+  }, [map]);
+  return null;
+}
+
 const STATUS_STYLE: Record<LocationStatus, { fill: string; dash?: string; label: string }> = {
   Historical: { fill: '#34d399', label: 'Historical / verifiable' },
   Contested: { fill: '#fbbf24', dash: '4 3', label: 'Contested identification' },
@@ -27,11 +49,12 @@ const STATUS_STYLE: Record<LocationStatus, { fill: string; dash?: string; label:
 
 export default function MapView() {
   const { bookRange, setSelection } = useFilters();
+  const { ref, width } = useElementSize<HTMLDivElement>();
   const [from, to] = bookRange;
   const inRange = (book: number) => book >= from && book <= to;
 
   return (
-    <div className="relative w-full h-full">
+    <div ref={ref} className="relative w-full h-full">
       <MapContainer
         center={[38.6, 15.5]}
         zoom={6}
@@ -40,6 +63,7 @@ export default function MapView() {
         className="w-full h-full"
         style={{ height: '100%' }}
       >
+        <MapResizeSync />
         {/* CartoDB Dark Matter — open tiles, no API key, GitHub Pages friendly */}
         <TileLayer
           url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
@@ -133,8 +157,11 @@ export default function MapView() {
 
       <PlaybackControls />
 
-      {/* ——— Symbology legend ——— */}
-      <div className="absolute bottom-4 left-3 z-[1000] bg-slate-900/90 border border-slate-700 rounded-lg px-3 py-2 text-[11px] space-y-1.5 max-w-[240px]">
+      {/* ——— Symbology legend (hidden when too narrow to share the floor with the player) ——— */}
+      <div
+        className="absolute bottom-4 left-3 z-[1000] bg-slate-900/90 border border-slate-700 rounded-lg px-3 py-2 text-[11px] space-y-1.5 max-w-[240px]"
+        style={{ display: width < 900 ? 'none' : undefined }}
+      >
         <div className="text-slate-400 uppercase tracking-widest text-[9px]">Itineraries</div>
         {(Object.keys(ITINERARY_COLORS) as ItineraryCharacter[]).map((c) => (
           <div key={c} className="flex items-center gap-2 text-slate-300">

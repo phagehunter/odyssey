@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useFilters, type PanelTab } from '../context/FilterContext';
+import { notifyLayoutChange } from '../hooks/useElementSize';
 import CloseReadingPanel from './CloseReadingPanel';
 import TextReader from './TextReader';
 
@@ -8,14 +9,52 @@ const TABS: { id: PanelTab; label: string }[] = [
   { id: 'text', label: 'Text' },
 ];
 
+const DEFAULT_WIDTH = 400;
+const MIN_WIDTH = 300;
+const STORAGE_KEY = 'atlas-panel-width';
+
+const maxWidth = () => Math.round(window.innerWidth * 0.72);
+
 /**
  * Right sidebar: switchable between analytical Commentary (close reading)
- * and the full Butler Text, so the poem can be read alongside every view.
- * Collapsible to give the visualizations the full width.
+ * and the full Butler Text. Drag the left edge to widen it for a reading
+ * session or narrow it to favour the visualizations; double-click the
+ * handle to reset. Collapsible entirely.
  */
 export default function SidePanel() {
   const { panelTab, setPanelTab } = useFilters();
   const [collapsed, setCollapsed] = useState(false);
+  const [width, setWidth] = useState(() => {
+    const saved = Number(localStorage.getItem(STORAGE_KEY));
+    return saved >= MIN_WIDTH ? Math.min(saved, maxWidth()) : DEFAULT_WIDTH;
+  });
+  const widthRef = useRef(width);
+  widthRef.current = width;
+
+  // Announce layout changes after the DOM has committed, so the
+  // visualizations re-measure their containers (drag, reset, collapse).
+  useEffect(() => {
+    notifyLayoutChange();
+  }, [width, collapsed]);
+
+  const startDrag = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    const move = (ev: MouseEvent) => {
+      const w = Math.min(Math.max(window.innerWidth - ev.clientX, MIN_WIDTH), maxWidth());
+      setWidth(w);
+    };
+    const up = () => {
+      window.removeEventListener('mousemove', move);
+      window.removeEventListener('mouseup', up);
+      document.body.style.cursor = '';
+      document.body.style.userSelect = '';
+      localStorage.setItem(STORAGE_KEY, String(widthRef.current));
+    };
+    window.addEventListener('mousemove', move);
+    window.addEventListener('mouseup', up);
+    document.body.style.cursor = 'col-resize';
+    document.body.style.userSelect = 'none';
+  }, []);
 
   if (collapsed) {
     return (
@@ -36,7 +75,26 @@ export default function SidePanel() {
   }
 
   return (
-    <aside className="w-[400px] max-w-[44vw] shrink-0 border-l border-slate-800 bg-slate-950/70 flex flex-col min-h-0">
+    <aside
+      className="relative shrink-0 border-l border-slate-800 bg-slate-950/70 flex flex-col min-h-0"
+      style={{ width }}
+    >
+      {/* Drag handle: resize the panel; double-click to reset */}
+      <div
+        role="separator"
+        aria-orientation="vertical"
+        aria-label="Resize reading panel"
+        title="Drag to resize · double-click to reset"
+        onMouseDown={startDrag}
+        onDoubleClick={() => {
+          setWidth(DEFAULT_WIDTH);
+          localStorage.setItem(STORAGE_KEY, String(DEFAULT_WIDTH));
+        }}
+        className="absolute left-0 top-0 bottom-0 w-2 -ml-1 z-20 cursor-col-resize group"
+      >
+        <div className="absolute left-1 top-0 bottom-0 w-[3px] bg-transparent group-hover:bg-emerald-500/60 group-active:bg-emerald-400 transition-colors" />
+      </div>
+
       <div className="flex items-center gap-1 px-3 py-2 border-b border-slate-800">
         {TABS.map((t) => (
           <button

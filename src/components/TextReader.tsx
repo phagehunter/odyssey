@@ -106,8 +106,9 @@ export default function TextReader() {
         </button>
       </div>
 
-      {/* Text body */}
+      {/* Text body — measure capped so wide panels stay comfortable to read */}
       <div ref={scrollRef} className="flex-1 overflow-y-auto px-5 py-4">
+        <div className="max-w-[42rem] mx-auto">
         <h3 className="font-display text-2xl text-sepia-200 mb-3 tracking-wide">
           Book {readerBook}
         </h3>
@@ -161,6 +162,7 @@ export default function TextReader() {
             <b className="text-slate-400">Telemachus</b> and{' '}
             <b className="text-slate-400">Penelope</b> are unchanged.
           </p>
+        </div>
         </div>
       </div>
     </div>
