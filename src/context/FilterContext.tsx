@@ -32,6 +32,8 @@ export const ALIGNMENT_COLORS: Record<Alignment, string> = {
   Shade: '#94a3b8', // slate
 };
 
+export type PanelTab = 'commentary' | 'text';
+
 interface FilterState {
   /** Inclusive book range [from, to], 1–24. */
   bookRange: [number, number];
@@ -40,6 +42,14 @@ interface FilterState {
   toggleGroup: (g: GroupKey) => void;
   selection: Selection | null;
   setSelection: (s: Selection | null) => void;
+  /** Sidebar mode: analytical commentary vs. the full Butler text. */
+  panelTab: PanelTab;
+  setPanelTab: (t: PanelTab) => void;
+  /** Book currently open in the Text reader. */
+  readerBook: number;
+  setReaderBook: (b: number) => void;
+  /** Jump the sidebar to the Text tab, opened at a given book. */
+  openText: (book: number) => void;
 }
 
 const FilterContext = createContext<FilterState | null>(null);
@@ -53,6 +63,8 @@ export function FilterProvider({ children }: { children: ReactNode }) {
     external: true,
   });
   const [selection, setSelection] = useState<Selection | null>(null);
+  const [panelTab, setPanelTab] = useState<PanelTab>('commentary');
+  const [readerBook, setReaderBook] = useState(1);
 
   const value = useMemo<FilterState>(
     () => ({
@@ -61,9 +73,21 @@ export function FilterProvider({ children }: { children: ReactNode }) {
       enabledGroups,
       toggleGroup: (g) => setEnabledGroups((prev) => ({ ...prev, [g]: !prev[g] })),
       selection,
-      setSelection,
+      // Selecting something surfaces the Commentary tab so the notes are visible.
+      setSelection: (s) => {
+        setSelection(s);
+        if (s) setPanelTab('commentary');
+      },
+      panelTab,
+      setPanelTab,
+      readerBook,
+      setReaderBook,
+      openText: (book) => {
+        setReaderBook(Math.max(1, Math.min(24, book)));
+        setPanelTab('text');
+      },
     }),
-    [bookRange, enabledGroups, selection],
+    [bookRange, enabledGroups, selection, panelTab, readerBook],
   );
 
   return <FilterContext.Provider value={value}>{children}</FilterContext.Provider>;

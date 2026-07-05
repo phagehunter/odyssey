@@ -12,6 +12,21 @@ body {
   @apply bg-slate-950 text-slate-200 font-body antialiased;
 }
 
+::selection {
+  background: rgba(16, 185, 129, 0.3);
+}
+
+/* Reader drop cap — first paragraph of each book */
+.drop-cap::first-letter {
+  float: left;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 600;
+  font-size: 3.1em;
+  line-height: 0.82;
+  padding-right: 0.09em;
+  color: #d9c19a;
+}
+
 /* ——— Custom scrollbars for the academic dark theme ——— */
 * {
   scrollbar-width: thin;
@@ -75,7 +90,8 @@ input[type='range'].book-thumb::-moz-range-thumb {
 }
 .leaflet-popup-content {
   margin: 10px 14px;
-  line-height: 1.45;
+  line-height: 1.5;
+  font-size: 13.5px;
 }
 .leaflet-tooltip-top:before,
 .leaflet-tooltip-bottom:before,

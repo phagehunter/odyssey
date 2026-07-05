@@ -15,8 +15,10 @@ export default {
         },
       },
       fontFamily: {
-        display: ['"Iowan Old Style"', '"Palatino Linotype"', 'Palatino', 'Georgia', 'serif'],
-        body: ['ui-sans-serif', 'system-ui', '-apple-system', 'Segoe UI', 'sans-serif'],
+        // Brand: Cormorant Garamond (display/reading) + Source Sans 3 (UI) — self-hosted via @fontsource
+        display: ['"Cormorant Garamond"', '"Iowan Old Style"', 'Palatino', 'Georgia', 'serif'],
+        reading: ['"Cormorant Garamond"', 'Georgia', 'serif'],
+        body: ['"Source Sans 3"', 'ui-sans-serif', 'system-ui', '-apple-system', 'Segoe UI', 'sans-serif'],
       },
     },
   },

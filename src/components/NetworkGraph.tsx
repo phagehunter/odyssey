@@ -137,11 +137,16 @@ export default function NetworkGraph() {
     }
 
     if (scale > 0.9) {
-      const fontSize = Math.max(2.8, 11 / scale);
-      ctx.font = `${fontSize}px Georgia, serif`;
+      const fontSize = Math.max(3, 11.5 / scale);
+      ctx.font = `600 ${fontSize}px 'Source Sans 3', sans-serif`;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'top';
-      ctx.fillStyle = '#cbd5e1';
+      // Dark halo behind the label so names stay legible over edges
+      ctx.strokeStyle = 'rgba(2, 6, 23, 0.85)';
+      ctx.lineWidth = Math.max(0.8, 3 / scale);
+      ctx.lineJoin = 'round';
+      ctx.strokeText(n.char.name, node.x, node.y + r + 2);
+      ctx.fillStyle = '#e2e8f0';
       ctx.fillText(n.char.name, node.x, node.y + r + 2);
     }
   }, []);

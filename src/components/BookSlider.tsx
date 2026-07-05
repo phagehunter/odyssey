@@ -48,7 +48,7 @@ export default function BookSlider() {
           ))}
         </div>
       </div>
-      <span className="font-display text-sm text-sepia-300 whitespace-nowrap tabular-nums">
+      <span className="font-display font-semibold text-base text-sepia-200 whitespace-nowrap tabular-nums">
         {from === to ? `Book ${from}` : `Books ${from}–${to}`}
       </span>
     </div>
