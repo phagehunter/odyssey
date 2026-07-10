@@ -49,11 +49,11 @@ export default function App() {
     <FilterProvider>
       <div className="h-full flex flex-col bg-slate-950">
         {/* ——— Branded header ——— */}
-        <header className="border-b border-slate-800 px-5 py-3 flex flex-wrap items-center gap-x-8 gap-y-2">
-          <div className="flex items-center gap-3">
+        <header className="border-b border-slate-800 px-4 sm:px-5 py-2 sm:py-3 flex flex-wrap items-center gap-x-8 gap-y-1.5">
+          <div className="flex items-center gap-2.5 sm:gap-3">
             <BrandMark />
             <div>
-              <h1 className="font-display font-bold text-[20px] leading-none text-sepia-200 uppercase tracking-[0.16em]">
+              <h1 className="font-display font-bold text-[15px] sm:text-[20px] leading-none text-sepia-200 uppercase tracking-[0.1em] sm:tracking-[0.16em]">
                 Odyssey Character Map
               </h1>
               <p className="text-[12px] text-slate-400 mt-1 tracking-wide">
@@ -81,13 +81,13 @@ export default function App() {
               </p>
             </div>
           </div>
-          <nav className="flex gap-1 ml-auto">
+          <nav className="flex flex-wrap gap-1 ml-auto">
             {TABS.map((t) => (
               <button
                 key={t.id}
                 onClick={() => setView(t.id)}
                 title={t.sub}
-                className={`px-3.5 py-1.5 rounded-md text-[15px] transition-colors border ${
+                className={`px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-md text-[13px] sm:text-[15px] transition-colors border ${
                   view === t.id
                     ? 'bg-emerald-900/40 border-emerald-600/60 text-emerald-200'
                     : 'border-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
@@ -100,13 +100,13 @@ export default function App() {
         </header>
 
         {/* ——— Global controls: book window + group toggles ——— */}
-        <div className="border-b border-slate-800 px-5 py-2.5 flex flex-wrap items-center gap-x-8 gap-y-2 bg-slate-900/40">
+        <div className="border-b border-slate-800 px-4 sm:px-5 py-2 sm:py-2.5 flex flex-wrap items-center gap-x-6 sm:gap-x-8 gap-y-1.5 bg-slate-900/40">
           <BookSlider />
           <GroupFilters />
         </div>
 
-        {/* ——— Main: active view + Commentary/Text sidebar ——— */}
-        <main className="flex-1 flex min-h-0">
+        {/* ——— Main: view + reading panel (side-by-side on desktop, stacked on mobile) ——— */}
+        <main className="flex-1 flex flex-col md:flex-row min-h-0">
           <section className="flex-1 min-w-0 min-h-0">
             {view === 'network' && <NetworkGraph />}
             {view === 'map' && <MapView />}

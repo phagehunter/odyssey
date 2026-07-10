@@ -114,3 +114,12 @@ input[type='range'].book-thumb::-moz-range-thumb {
 .leaflet-bar a:hover {
   background: #1e293b;
 }
+
+/* Mobile browsers: track the dynamic viewport (URL bar show/hide) */
+@supports (height: 100dvh) {
+  html,
+  body,
+  #root {
+    height: 100dvh;
+  }
+}

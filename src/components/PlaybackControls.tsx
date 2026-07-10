@@ -12,7 +12,7 @@ export default function PlaybackControls() {
   const active = playBook !== null;
 
   return (
-    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-[1000] flex items-center gap-3 bg-slate-900/90 border border-slate-700 rounded-full pl-2 pr-4 py-1.5 shadow-xl backdrop-blur-sm">
+    <div className="absolute bottom-3 sm:bottom-4 left-1/2 -translate-x-1/2 z-[1000] max-w-[95vw] flex items-center gap-2 sm:gap-3 bg-slate-900/90 border border-slate-700 rounded-full pl-2 pr-3 sm:pr-4 py-1.5 shadow-xl backdrop-blur-sm">
       {/* Play / pause */}
       <button
         onClick={playToggle}
@@ -24,12 +24,12 @@ export default function PlaybackControls() {
       </button>
 
       {/* Playhead readout + progress */}
-      <div className="w-56">
+      <div className="w-32 sm:w-56">
         <div className="flex items-baseline justify-between gap-2">
           <span className="text-sm text-slate-100 font-semibold whitespace-nowrap">
             {active ? `Book ${playBook}` : 'Play the epic'}
           </span>
-          <span className="text-[11px] text-slate-400 truncate">
+          <span className="hidden sm:inline text-[11px] text-slate-400 truncate">
             {active ? BOOK_TITLES[playBook!] : 'watch it unfold book by book'}
           </span>
         </div>
@@ -41,8 +41,8 @@ export default function PlaybackControls() {
         </div>
       </div>
 
-      {/* Mode toggle */}
-      <div className="flex rounded-md overflow-hidden border border-slate-700 text-[11px]">
+      {/* Mode toggle (hidden on phones — Growing is the default) */}
+      <div className="hidden sm:flex rounded-md overflow-hidden border border-slate-700 text-[11px]">
         {(
           [
             ['cumulative', 'Growing'],

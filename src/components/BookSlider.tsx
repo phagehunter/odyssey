@@ -11,7 +11,7 @@ export default function BookSlider() {
   const pct = (v: number) => ((v - 1) / 23) * 100;
 
   return (
-    <div className="flex items-center gap-4 min-w-[280px] flex-1 max-w-xl">
+    <div className="flex items-center gap-3 sm:gap-4 min-w-[230px] flex-1 max-w-xl">
       <span className="text-xs uppercase tracking-widest text-slate-400 whitespace-nowrap">
         Books
       </span>
