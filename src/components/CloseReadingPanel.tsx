@@ -111,7 +111,7 @@ export default function CloseReadingPanel() {
           </p>
           <p className="text-[13px] text-slate-500 italic font-reading">
             Distant reading finds the pattern; close reading gives it a voice — the two halves of
-            this atlas are meant to be read against each other.
+            this project are meant to be read against each other.
           </p>
         </div>
       )}

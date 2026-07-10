@@ -53,12 +53,31 @@ export default function App() {
           <div className="flex items-center gap-3">
             <BrandMark />
             <div>
-              <h1 className="font-display font-bold text-[22px] leading-none text-sepia-200 uppercase tracking-[0.22em]">
-                Odyssey&thinsp;Atlas
+              <h1 className="font-display font-bold text-[20px] leading-none text-sepia-200 uppercase tracking-[0.16em]">
+                Odyssey Character Map
               </h1>
               <p className="text-[12px] text-slate-400 mt-1 tracking-wide">
-                A visual companion to Homer&apos;s epic — network · topography · focalization ·
-                full text
+                A visual companion to Homer&apos;s epic
+              </p>
+              <p className="text-[11px] text-slate-500 mt-0.5">
+                Project by{' '}
+                <a
+                  href="https://curtishoffmann.com"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-slate-400 hover:text-emerald-300 underline decoration-dotted underline-offset-2"
+                >
+                  Curtis Hoffmann
+                </a>
+                {' · '}
+                <a
+                  href="https://forms.gle/ydBNztwZkeNYaWbc7"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-slate-400 hover:text-emerald-300 underline decoration-dotted underline-offset-2"
+                >
+                  Share Your Feedback ↗
+                </a>
               </p>
             </div>
           </div>

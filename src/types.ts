@@ -1,4 +1,4 @@
-/** Shared domain types for the Odyssey Atlas. */
+/** Shared domain types for the Odyssey Character Map. */
 
 /**
  * Fine-grained alignment used for node colouring.

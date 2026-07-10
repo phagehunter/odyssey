@@ -1,4 +1,4 @@
-# Odyssey Atlas
+# Odyssey Character Map
 
 **Live site: [curtishoffmann.com/odyssey](https://curtishoffmann.com/odyssey/)**
 
