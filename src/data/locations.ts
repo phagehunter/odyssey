@@ -27,24 +27,24 @@ export const LOCATIONS: OdysseyLocation[] = [
     events: [{ book: 9, description: 'The flowering food of forgetfulness; scouts dragged weeping back to the ships.' }],
   },
   {
-    id: 'cyclopes', name: 'Island of the Cyclopes', status: 'Mythological', coordinates: [37.75, 15.1],
+    id: 'cyclopes', name: 'Island of the Cyclopes', status: 'Contested', coordinates: [37.75, 15.1],
     books: [9],
-    note: 'Tradition places it below Etna in eastern Sicily; the text gives an ungeographical "land beyond".',
+    note: 'The standard ancient identification is Sicily below Etna — already in Euripides\' Cyclops and Thucydides 6.2 — though the text itself gives an ungeographical "land beyond".',
     events: [
       { book: 9, description: 'The cave of Polyphemus: six men devoured; the Nobody-trick and the blinding.' },
       { book: 9, description: 'The name-boast from the ship and the curse of Poseidon set the plot of the poem.' },
     ],
   },
   {
-    id: 'aeolia', name: 'Aeolia', status: 'Mythological', coordinates: [38.79, 15.21],
+    id: 'aeolia', name: 'Aeolia', status: 'Contested', coordinates: [38.79, 15.21],
     books: [10],
-    note: 'A floating island ringed in bronze — identified with the Aeolian (Lipari) islands by ancient scholars.',
+    note: 'A floating island ringed in bronze — yet the identification with the Aeolian (Lipari) islands is ancient-standard, attested as early as Thucydides 3.88.',
     events: [{ book: 10, description: 'A month of hospitality; the bag of winds; Ithaca sighted, then lost when the crew open it.' }],
   },
   {
-    id: 'laestrygonia', name: 'Telepylos (Laestrygonians)', status: 'Mythological', coordinates: [41.39, 9.16],
+    id: 'laestrygonia', name: 'Telepylos (Laestrygonians)', status: 'Contested', coordinates: [41.39, 9.16],
     books: [10],
-    note: 'The closed harbour suggests Bonifacio (Corsica) to many; the near-nightless sky suggests the far north. Homer alters spatial reality here.',
+    note: 'Two traditions compete: Thucydides 6.2 places the Laestrygonians in Sicily (the ancient standard), while moderns following Bérard prefer Bonifacio (Corsica), whose closed trap-harbour matches the ambush uncannily. Mapped here at Bonifacio; the near-nightless sky hints Homer is bending space either way.',
     events: [{ book: 10, description: 'Giants spear men like fish; eleven of twelve ships destroyed in the harbour.' }],
   },
   {
@@ -57,9 +57,9 @@ export const LOCATIONS: OdysseyLocation[] = [
     ],
   },
   {
-    id: 'underworld', name: 'The Underworld (Nekyia)', status: 'Mythological', coordinates: [36.1, -6.9],
+    id: 'underworld', name: 'The Underworld (Necromanteion of Acheron)', status: 'Contested', coordinates: [39.237, 20.534],
     books: [11],
-    note: 'Beyond the stream of Ocean, in the fog-bound land of the Cimmerians — placed here at the Pillars of Heracles only as cartographic convention. No real geography applies.',
+    note: 'Homer frames the Nekyia beyond Ocean among the fog-bound Cimmerians, but its strongest real-world anchor is here: the Necromanteion of Acheron in Epirus, where the Acheron, Pyriphlegethon, and Cocytus converge. Pausanias (1.17.5) judged that Homer drew his Hades from these Thesprotian rivers, and Dakaris\' excavations (from 1958) uncovered the oracle-of-the-dead sanctuary itself. Rival traditions put the entrance at Cumae (Bérard) or the Cimmerians on the Bosporus (Strabo 1.2.9).',
     events: [
       { book: 11, description: 'The blood-rite; Elpenor, Tiresias\' prophecy, Anticleia; the catalogue of heroines.' },
       { book: 11, description: 'Agamemnon\'s warning, Achilles\' recantation, Ajax\'s silence.' },

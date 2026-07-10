@@ -28,7 +28,7 @@ export const ITINERARIES: ItinerarySegment[] = [
     summary: 'One ship remains. Landfall on Circe\'s island, "where east and west mean nothing."',
     themes: ['Disorientation', 'Enchantment'], citation: 'Od. 10.133–197' },
   { character: 'odysseus', segment: 7, origin: 'aeaea', destination: 'underworld', book: 11, inferred: true, nested: true,
-    summary: 'Across the stream of Ocean to the fog-bound Cimmerians and the house of Hades — the most purely allegorical voyage in the poem.',
+    summary: 'Across the stream of Ocean to the house of Hades — in the poem\'s own frame the most allegorical voyage of all, here anchored to its likeliest real-world gateway: the oracle of the dead on the Acheron in Epirus (Pausanias 1.17.5).',
     themes: ['Katabasis', 'Knowledge from the dead'], citation: 'Od. 11.1–22' },
   { character: 'odysseus', segment: 8, origin: 'underworld', destination: 'aeaea', book: 12, inferred: true, nested: true,
     summary: 'Return to Aeaea to bury Elpenor and receive Circe\'s sailing directions.',
