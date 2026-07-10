@@ -58,8 +58,11 @@ interface FilterState {
   /** Book currently open in the Text reader. */
   readerBook: number;
   setReaderBook: (b: number) => void;
-  /** Jump the sidebar to the Text tab, opened at a given book. */
-  openText: (book: number) => void;
+  /** Greek line number to approximate-scroll to (Butler's prose has no line
+   *  numbers, so the reader lands proportionally and flashes the paragraph). */
+  readerLine: number | null;
+  /** Jump the sidebar to the Text tab at a book (and optionally a line). */
+  openText: (book: number, line?: number) => void;
   /** Character spotlighted in the network from the Text reader. */
   highlight: Highlight | null;
   setHighlight: (h: Highlight | null) => void;
@@ -85,6 +88,7 @@ export function FilterProvider({ children }: { children: ReactNode }) {
   const [selection, setSelection] = useState<Selection | null>(null);
   const [panelTab, setPanelTab] = useState<PanelTab>('commentary');
   const [readerBook, setReaderBook] = useState(1);
+  const [readerLine, setReaderLine] = useState<number | null>(null);
   const [highlight, setHighlight] = useState<Highlight | null>(null);
   const [playing, setPlaying] = useState(false);
   const [playBook, setPlayBook] = useState<number | null>(null);
@@ -123,9 +127,14 @@ export function FilterProvider({ children }: { children: ReactNode }) {
       panelTab,
       setPanelTab,
       readerBook,
-      setReaderBook,
-      openText: (book) => {
+      setReaderBook: (b) => {
+        setReaderBook(b);
+        setReaderLine(null); // manual navigation clears the line target
+      },
+      readerLine,
+      openText: (book, line) => {
         setReaderBook(Math.max(1, Math.min(24, book)));
+        setReaderLine(line ?? null);
         setPanelTab('text');
       },
       highlight,
@@ -148,7 +157,7 @@ export function FilterProvider({ children }: { children: ReactNode }) {
         setBookRange([1, 24]);
       },
     }),
-    [bookRange, enabledGroups, selection, panelTab, readerBook, highlight, playing, playBook, playMode],
+    [bookRange, enabledGroups, selection, panelTab, readerBook, readerLine, highlight, playing, playBook, playMode],
   );
 
   return <FilterContext.Provider value={value}>{children}</FilterContext.Provider>;

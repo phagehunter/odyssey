@@ -1,4 +1,5 @@
 import { CHARACTER_BY_ID } from '../data/characters';
+import { parseOdCitation } from '../data/bookLines';
 import { LOCATION_BY_ID } from '../data/locations';
 import { INTERACTIONS } from '../data/interactions';
 import { ALIGNMENT_COLORS, useFilters } from '../context/FilterContext';
@@ -34,14 +35,20 @@ function ThemeChips({ themes }: { themes: string[] }) {
   );
 }
 
-/** Citation that jumps the sidebar to the Text tab at the cited book. */
+/** Citation that jumps the Text tab to the cited passage — book plus an
+ *  approximate scroll to the cited line's position within Butler's prose. */
 function CitationLink({ citation, book }: { citation?: string; book: number }) {
   const { openText } = useFilters();
+  const parsed = citation ? parseOdCitation(citation) : null;
   return (
     <button
-      onClick={() => openText(book)}
+      onClick={() => openText(parsed?.book ?? book, parsed?.line)}
       className="text-[11px] font-mono text-emerald-400/90 hover:text-emerald-300 hover:underline whitespace-nowrap"
-      title={`Open Book ${book} in the Text tab`}
+      title={
+        parsed
+          ? `Open Book ${parsed.book} near line ${parsed.line} (approximate — the prose translation is unnumbered)`
+          : `Open Book ${book} in the Text tab`
+      }
     >
       {citation ?? `Book ${book}`} ↗
     </button>

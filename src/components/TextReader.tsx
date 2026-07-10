@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { useFilters } from '../context/FilterContext';
 import { NAME_REGEX, NAME_TO_ID } from '../data/nameMap';
+import { BOOK_LINES } from '../data/bookLines';
 
 /** In-memory cache: each book is fetched at most once per session. */
 const bookCache = new Map<number, string[]>();
@@ -40,16 +41,16 @@ function LinkedText({ text }: { text: string }) {
  * static per-book JSON from public/text/ — no external requests.
  */
 export default function TextReader() {
-  const { readerBook, setReaderBook } = useFilters();
+  const { readerBook, readerLine, setReaderBook } = useFilters();
   const [paragraphs, setParagraphs] = useState<string[] | null>(
     bookCache.get(readerBook) ?? null,
   );
   const [failed, setFailed] = useState(false);
+  const [flashPara, setFlashPara] = useState<number | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     let alive = true;
-    scrollRef.current?.scrollTo({ top: 0 });
     if (bookCache.has(readerBook)) {
       setParagraphs(bookCache.get(readerBook)!);
       setFailed(false);
@@ -71,6 +72,28 @@ export default function TextReader() {
       alive = false;
     };
   }, [readerBook]);
+
+  // Land on the cited passage: the Greek line's position within the book
+  // maps proportionally onto Butler's paragraphs. Without a line target,
+  // start at the top.
+  useEffect(() => {
+    if (!paragraphs) return;
+    if (readerLine) {
+      const total = BOOK_LINES[readerBook] ?? 500;
+      const idx = Math.min(
+        paragraphs.length - 1,
+        Math.max(0, Math.round((readerLine / total) * (paragraphs.length - 1))),
+      );
+      const el = document.getElementById(`op-${readerBook}-${idx}`);
+      if (el) {
+        el.scrollIntoView({ block: 'center' });
+        setFlashPara(idx);
+        const t = setTimeout(() => setFlashPara(null), 2600);
+        return () => clearTimeout(t);
+      }
+    }
+    scrollRef.current?.scrollTo({ top: 0 });
+  }, [paragraphs, readerBook, readerLine]);
 
   return (
     <div className="flex flex-col min-h-0 h-full">
@@ -125,9 +148,10 @@ export default function TextReader() {
             {paragraphs.map((p, i) => (
               <p
                 key={i}
-                className={`font-reading text-[16px] leading-[1.8] text-slate-100 ${
+                id={`op-${readerBook}-${i}`}
+                className={`font-reading text-[16px] leading-[1.8] text-slate-100 rounded-md transition-colors duration-700 ${
                   i === 0 ? 'drop-cap' : ''
-                }`}
+                } ${flashPara === i ? 'bg-emerald-900/30 ring-1 ring-emerald-600/50 px-2 -mx-2' : ''}`}
               >
                 <LinkedText text={p} />
               </p>
