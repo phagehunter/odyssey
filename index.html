@@ -4,15 +4,98 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#0f172a" />
+
+    <!-- Primary SEO -->
+    <title>Odyssey Character Map — A Visual Companion to Homer's Epic</title>
     <meta
       name="description"
-      content="Odyssey Character Map — a visual companion to Homer's epic: character networks, spatial topography, narrative focalization, and the full Butler translation."
+      content="Explore Homer's Odyssey visually: an interactive character network, a map of real and mythic seas, narrative focalization across all 24 books, and the full Butler translation with linked names."
     />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <title>Odyssey Character Map — A Visual Companion to Homer's Epic</title>
+    <meta name="author" content="Curtis Hoffmann" />
+    <meta
+      name="keywords"
+      content="Odyssey, Homer, character map, character network, digital humanities, Greek epic, Odysseus, interactive visualization, Butler translation"
+    />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <link rel="canonical" href="https://curtishoffmann.com/odyssey/" />
+
+    <!-- Open Graph (Facebook, LinkedIn, iMessage, Slack, Discord…) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Curtis Hoffmann" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:url" content="https://curtishoffmann.com/odyssey/" />
+    <meta property="og:title" content="Odyssey Character Map — A Visual Companion to Homer's Epic" />
+    <meta
+      property="og:description"
+      content="An interactive character network, a map of real and mythic seas, narrative focalization across all 24 books, and the full text with linked names."
+    />
+    <meta property="og:image" content="https://curtishoffmann.com/odyssey/og-image.jpg" />
+    <meta property="og:image:secure_url" content="https://curtishoffmann.com/odyssey/og-image.jpg" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="Odyssey Character Map — a dark card with an omega brand mark, the title, and a colorful character-network graph."
+    />
+
+    <!-- Twitter / X card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Odyssey Character Map — A Visual Companion to Homer's Epic" />
+    <meta
+      name="twitter:description"
+      content="An interactive character network, a map of real and mythic seas, narrative focalization across all 24 books, and the full text with linked names."
+    />
+    <meta name="twitter:image" content="https://curtishoffmann.com/odyssey/og-image.jpg" />
+    <meta
+      name="twitter:image:alt"
+      content="Odyssey Character Map — a dark card with an omega brand mark, the title, and a colorful character-network graph."
+    />
+
+    <!-- Icons -->
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png" />
+
+    <!-- Structured data -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Odyssey Character Map",
+        "alternateName": "A Visual Companion to Homer's Epic",
+        "url": "https://curtishoffmann.com/odyssey/",
+        "description": "Interactive visual literary analysis of Homer's Odyssey: a force-directed character network, a map of real and mythic locations, narrative focalization across all 24 books, and the full Samuel Butler translation with linked character names.",
+        "applicationCategory": "EducationalApplication",
+        "operatingSystem": "Any",
+        "browserRequirements": "Requires JavaScript",
+        "isAccessibleForFree": true,
+        "image": "https://curtishoffmann.com/odyssey/og-image.jpg",
+        "inLanguage": "en",
+        "author": {
+          "@type": "Person",
+          "name": "Curtis Hoffmann",
+          "url": "https://curtishoffmann.com"
+        },
+        "about": {
+          "@type": "CreativeWork",
+          "name": "The Odyssey",
+          "author": { "@type": "Person", "name": "Homer" },
+          "inLanguage": "grc",
+          "genre": "Epic poetry"
+        }
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>
+    <noscript>
+      <h1>Odyssey Character Map</h1>
+      <p>
+        A visual companion to Homer's epic by Curtis Hoffmann: an interactive character network, a
+        map of real and mythic seas, narrative focalization across all 24 books, and the full
+        Samuel Butler translation with linked names. This application requires JavaScript.
+      </p>
+    </noscript>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
