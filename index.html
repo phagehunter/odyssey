@@ -87,15 +87,47 @@
     </script>
   </head>
   <body>
+    <!-- Pre-rendered introduction: readable without JavaScript and by crawlers; hidden once the app has mounted. -->
+    <style>
+      #intro { font-family: "Source Serif 4", Georgia, serif; background: #020617; color: #e2e8f0; padding: 40px 20px 48px; line-height: 1.6; }
+      #intro .wrap { max-width: 760px; margin: 0 auto; }
+      #intro h1 { font-family: "Cormorant Garamond", "Iowan Old Style", Palatino, Georgia, serif; color: #e7d7ba; font-size: 2rem; letter-spacing: 0.08em; text-transform: uppercase; margin: 0 0 0.2em; }
+      #intro .sub { color: #94a3b8; margin: 0 0 1.4em; }
+      #intro h2 { font-family: "Cormorant Garamond", Georgia, serif; color: #d9c19a; font-size: 1.3rem; margin: 1.4em 0 0.4em; }
+      #intro p { margin: 0 0 1em; }
+      #intro ul { padding-left: 1.2em; margin: 0 0 1em; }
+      #intro li { margin: 0 0 0.4em; }
+      #intro a { color: #d9c19a; }
+      body:has(#root:not(:empty)) #intro { display: none; }
+    </style>
+    <section id="intro">
+      <div class="wrap">
+        <h1>Odyssey Character Map</h1>
+        <p class="sub">A visual companion to Homer's epic, by <a href="https://curtishoffmann.com/">Curtis Hoffmann</a></p>
+        <p>
+          This is a single-page dashboard for reading Homer's <em>Odyssey</em> two ways at once: at a distance,
+          through visualizations built from the poem's 53 named characters and groups, 17 real and mythic
+          places and the interactions between them; and up close, through commentary with line citations and the
+          complete Samuel Butler translation (1900) readable beside every view.
+        </p>
+        <p>
+          Use the book slider (1 to 24) and the group toggles (Ithacan loyalists, the suitors, the gods, foreign
+          peoples and monsters) to re-draw every view for any stretch of the story. Click a character, an edge, a
+          route or a waypoint to open the commentary panel; each citation there links into the text reader.
+        </p>
+        <h2>What the three views show</h2>
+        <ul>
+          <li><strong>Network Dynamics.</strong> A force-directed graph of who meets, helps or fights whom, including divine interventions. Node size follows how connected a character is; a playback control animates the network book by book. The 108 suitors are drawn as their two leaders plus regional groups.</li>
+          <li><strong>Spatial Topography.</strong> A map of the journeys of Odysseus, Telemachus and the divine messengers. Solid lines are explicit routes; dashed lines are inferred or mythic. Waypoints are marked historical, contested or mythological, because the locations of Ogygia, Aeaea and the Underworld are speculative by design.</li>
+          <li><strong>Narrative Gravity.</strong> A stream graph of whose point of view each book follows (Telemachus, Odysseus, Penelope, the gods, others), with a dual-timeline overlay for Books 9 to 12, where Odysseus narrates his own flashback at the Phaeacian court.</li>
+        </ul>
+        <p>
+          Focalization shares and interaction weights are editorial estimates made for visualization, not word
+          counts. The application needs JavaScript; it is loading now, or <a href="https://github.com/phagehunter/odyssey">read the source on GitHub</a>.
+        </p>
+      </div>
+    </section>
     <div id="root"></div>
-    <noscript>
-      <h1>Odyssey Character Map</h1>
-      <p>
-        A visual companion to Homer's epic by Curtis Hoffmann: an interactive character network, a
-        map of real and mythic seas, narrative focalization across all 24 books, and the full
-        Samuel Butler translation with linked names. This application requires JavaScript.
-      </p>
-    </noscript>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

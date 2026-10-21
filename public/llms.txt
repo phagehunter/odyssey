@@ -1,0 +1,30 @@
+# Odyssey Character Map
+
+> A single-page digital-humanities dashboard by Curtis Hoffmann for the visual literary analysis of Homer's Odyssey. It pairs distant reading (visualizations of the poem's characters, places and point of view) with close reading (commentary with line citations and the complete Samuel Butler translation of 1900, readable beside every view). The app is state-driven, with no router; there is one URL.
+
+Site: https://curtishoffmann.com/odyssey/
+Source: https://github.com/phagehunter/odyssey
+
+## The three views
+
+- Network Dynamics: a force-directed graph of character interactions and divine interventions across the 24 books. Node size follows degree centrality, edge width follows interaction frequency, color follows group or focal alignment. The 108 suitors appear as their leaders (Antinous, Eurymachus) plus regional aggregates (Dulichium 52, Same 24, Zacynthus 20, Ithaca 12, after Od. 16.245-253); the 50 palace maids aggregate with the 12 unfaithful maids split out. A playback control animates the network book by book.
+- Spatial Topography: a map (Leaflet, CartoDB dark tiles) of the itineraries of Odysseus, Telemachus and the divine messengers. Solid lines are explicit routes; dashed lines are inferred or mythic. Waypoints are classed historical, contested or mythological; mythological coordinates (Ogygia, Aeaea, the Underworld) follow post-Alexandrian scholarly tradition and are speculative by design.
+- Narrative Gravity: a stream graph of focalization share per book across Telemachus, Odysseus, Penelope, the gods and others, with a dual-timeline overlay for Books 9 to 12 (the Phaeacian frame versus the Apologoi flashback).
+
+## Controls and reading aids
+
+- A global book slider (1 to 24) and group toggles (Ithacan loyalists, suitors coalition, divine entities, external civilizations and monsters) re-render every view.
+- Clicking an edge, path, waypoint or node fills the commentary panel with a summary, thematic tags (xenia, nostos, metis and others) and Greek-text line citations, each linking into the Text tab.
+- The Text tab is a full reader of the Butler translation with per-book navigation; the text is served as one static JSON file per book.
+
+## Data and caveats
+
+- All data are TypeScript constants in `src/data/` (53 characters and groups, 17 locations, interactions, itineraries, focalization per book). The text comes from `odyssey.mb.txt` via `scripts/build-text.mjs`.
+- Focalization percentages and interaction weights are editorial estimates for visualization, not token counts.
+- No backend, no API keys, no tracking.
+
+## Contact
+
+- Author: Curtis Hoffmann, https://curtishoffmann.com/
+- Issues: https://github.com/phagehunter/odyssey/issues
+- Sitemap: https://curtishoffmann.com/odyssey/sitemap.xml
