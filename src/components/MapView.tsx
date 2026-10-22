@@ -66,8 +66,9 @@ export default function MapView() {
         <MapResizeSync />
         {/* CartoDB Dark Matter — open tiles, no API key, GitHub Pages friendly */}
         <TileLayer
-          url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+          url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          className="osm-dark"
           subdomains="abcd"
         />
 
@@ -133,7 +134,7 @@ export default function MapView() {
                   <div className="font-display text-base" style={{ color: style.fill }}>
                     {loc.name}
                   </div>
-                  <div className="text-[11px] uppercase tracking-wider text-slate-400 mb-1">
+                  <div className="text-[12px] uppercase tracking-wider text-slate-400 mb-1">
                     {style.label}
                   </div>
                   <div className="text-xs text-slate-300 mb-1.5">
@@ -159,10 +160,10 @@ export default function MapView() {
 
       {/* ——— Symbology legend (hidden when too narrow to share the floor with the player) ——— */}
       <div
-        className="absolute bottom-4 left-3 z-[1000] bg-slate-900/90 border border-slate-700 rounded-lg px-3 py-2 text-[11px] space-y-1.5 max-w-[240px]"
+        className="absolute bottom-4 left-3 z-[1000] bg-slate-900/90 border border-slate-700 rounded-lg px-3 py-2 text-[12px] space-y-1.5 max-w-[240px]"
         style={{ display: width < 900 ? 'none' : undefined }}
       >
-        <div className="text-slate-400 uppercase tracking-widest text-[9px]">Itineraries</div>
+        <div className="text-slate-400 uppercase tracking-widest text-[12px]">Itineraries</div>
         {(Object.keys(ITINERARY_COLORS) as ItineraryCharacter[]).map((c) => (
           <div key={c} className="flex items-center gap-2 text-slate-300">
             <span className="inline-block w-6 h-0.5" style={{ background: ITINERARY_COLORS[c] }} />
@@ -174,7 +175,7 @@ export default function MapView() {
           <div>┄ dashed: inferred / mythic-sea route</div>
         </div>
         <div className="pt-1 border-t border-slate-700/60 space-y-1">
-          <div className="text-slate-400 uppercase tracking-widest text-[9px]">Waypoints</div>
+          <div className="text-slate-400 uppercase tracking-widest text-[12px]">Waypoints</div>
           {(Object.entries(STATUS_STYLE) as [LocationStatus, (typeof STATUS_STYLE)[LocationStatus]][]).map(
             ([status, s]) => (
               <div key={status} className="flex items-center gap-2 text-slate-300">
@@ -187,7 +188,7 @@ export default function MapView() {
             ),
           )}
         </div>
-        <div className="pt-1 border-t border-slate-700/60 text-slate-500">
+        <div className="pt-1 border-t border-slate-700/60 text-slate-400">
           Dimmed features fall outside the selected book window.
         </div>
       </div>

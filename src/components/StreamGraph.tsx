@@ -48,6 +48,7 @@ export default function StreamGraph() {
   const { bookRange } = useFilters();
   const { ref, width } = useElementSize<HTMLDivElement>();
   const [hoverBook, setHoverBook] = useState<number | null>(null);
+  const [showTable, setShowTable] = useState(false);
 
   const height = 520;
   const innerW = Math.max(width - MARGIN.left - MARGIN.right, 50);
@@ -96,8 +97,45 @@ export default function StreamGraph() {
         </p>
       </div>
 
-      {width > 0 && (
+      <button
+        type="button"
+        onClick={() => setShowTable((v) => !v)}
+        aria-pressed={showTable}
+        className="mb-3 min-h-[40px] px-3 py-1.5 rounded-md border border-slate-700 bg-slate-900/90 text-[12px] text-slate-200 hover:border-emerald-500 transition-colors duration-150"
+      >
+        {showTable ? 'Show chart' : 'Show as table'}
+      </button>
+
+      {showTable && (
+        <table className="w-full max-w-3xl text-[13px] text-slate-200 mb-4">
+          <caption className="text-left text-slate-400 mb-2">Focalization share per book, editorial estimates in percent.</caption>
+          <thead>
+            <tr className="text-left text-slate-400 border-b border-slate-700">
+              <th className="py-1 pr-3 font-semibold">Book</th>
+              {KEYS.map((k) => (
+                <th key={k} className="py-1 pr-3 font-semibold text-right">{STREAM_LABELS[k]}</th>
+              ))}
+              <th className="py-1 font-semibold">Frame</th>
+            </tr>
+          </thead>
+          <tbody>
+            {FOCALIZATION.map((r) => (
+              <tr key={r.book} className="border-b border-slate-800">
+                <td className="py-1 pr-3 tabular-nums">{r.book}</td>
+                {KEYS.map((k) => (
+                  <td key={k} className="py-1 pr-3 tabular-nums text-right">{r[k]}%</td>
+                ))}
+                <td className="py-1">{r.nested ? `${r.nested.frame} (flashback: ${r.nested.diegetic})` : frameLabel(r.book)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+
+      {width > 0 && !showTable && (
         <svg
+          role="img"
+          aria-label="Stream graph of focalization share across the 24 books; the table view gives the same numbers"
           width={width - 32}
           height={height}
           onMouseMove={(e) => {
@@ -119,7 +157,7 @@ export default function StreamGraph() {
             {[0, 25, 50, 75, 100].map((v) => (
               <g key={v}>
                 <line x1={0} x2={innerW} y1={y(v)} y2={y(v)} stroke="#1e293b" strokeWidth={1} />
-                <text x={-8} y={y(v)} textAnchor="end" dominantBaseline="middle" className="fill-slate-500 text-[10px]">
+                <text x={-8} y={y(v)} textAnchor="end" dominantBaseline="middle" className="fill-slate-400 text-[12px]">
                   {v}%
                 </text>
               </g>
@@ -140,7 +178,7 @@ export default function StreamGraph() {
             {/* Apologoi nested-timeline overlay (Books 9–12) */}
             <rect x={x(8.5)} y={0} width={x(12.5) - x(8.5)} height={innerH} fill="url(#apologoi-hatch)" pointerEvents="none" />
             <rect x={x(8.5)} y={0} width={x(12.5) - x(8.5)} height={innerH} fill="none" stroke="#d9c19a" strokeDasharray="5 4" strokeWidth={1} pointerEvents="none" />
-            <text x={(x(8.5) + x(12.5)) / 2} y={-10} textAnchor="middle" className="fill-sepia-300 text-[11px] italic">
+            <text x={(x(8.5) + x(12.5)) / 2} y={-10} textAnchor="middle" className="fill-sepia-300 text-[12px] italic">
               Apologoi — nested first-person narration
             </text>
 
@@ -160,18 +198,18 @@ export default function StreamGraph() {
                 x={x(r.book)}
                 y={innerH + 14}
                 textAnchor="middle"
-                className={r.nested ? 'fill-sepia-300 text-[10px]' : 'fill-slate-500 text-[10px]'}
+                className={r.nested ? 'fill-sepia-300 text-[12px]' : 'fill-slate-400 text-[12px]'}
               >
                 {r.book}
               </text>
             ))}
-            <text x={innerW / 2} y={innerH + 30} textAnchor="middle" className="fill-slate-400 text-[11px]">
+            <text x={innerW / 2} y={innerH + 30} textAnchor="middle" className="fill-slate-400 text-[12px]">
               Book
             </text>
 
             {/* ——— Dual-timeline strips ——— */}
             <g transform={`translate(0, ${innerH + 42})`}>
-              <text x={-8} y={9} textAnchor="end" className="fill-slate-400 text-[9px]">
+              <text x={-8} y={9} textAnchor="end" className="fill-slate-400 text-[12px]">
                 FRAME
               </text>
               {FOCALIZATION.map((r) => (
@@ -195,12 +233,12 @@ export default function StreamGraph() {
                 { mid: 10.5, label: 'Scheria — Odysseus narrates' },
                 { mid: 18.5, label: 'Ithaca' },
               ].map((m) => (
-                <text key={m.mid} x={x(m.mid)} y={9.5} textAnchor="middle" className="fill-slate-300 text-[8.5px]">
+                <text key={m.mid} x={x(m.mid)} y={9.5} textAnchor="middle" className="fill-slate-300 text-[12px]">
                   {m.label}
                 </text>
               ))}
 
-              <text x={-8} y={28} textAnchor="end" className="fill-slate-400 text-[9px]">
+              <text x={-8} y={28} textAnchor="end" className="fill-slate-400 text-[12px]">
                 DIEGESIS
               </text>
               {FOCALIZATION.map((r) => (
@@ -216,11 +254,11 @@ export default function StreamGraph() {
                 />
               ))}
               {FOCALIZATION.filter((r) => r.nested).map((r) => (
-                <text key={r.book} x={x(r.book)} y={28.5} textAnchor="middle" className="fill-sepia-200 text-[7.5px]">
+                <text key={r.book} x={x(r.book)} y={28.5} textAnchor="middle" className="fill-sepia-200 text-[12px]">
                   {DIEGESIS_SHORT[r.book]}
                 </text>
               ))}
-              <text x={x(18.5)} y={28.5} textAnchor="middle" className="fill-slate-400 text-[8.5px]">
+              <text x={x(18.5)} y={28.5} textAnchor="middle" className="fill-slate-400 text-[12px]">
                 = frame (no flashback)
               </text>
             </g>
@@ -243,10 +281,10 @@ export default function StreamGraph() {
         <div className="absolute top-24 right-8 z-30 w-64 bg-slate-900/95 border border-slate-600 rounded-lg p-3 shadow-2xl pointer-events-none">
           <div className="font-display text-sepia-200 text-sm mb-1">Book {hoverRow.book}</div>
           {hoverRow.nested && (
-            <div className="text-[11px] mb-2 space-y-0.5 border-b border-slate-700 pb-1.5">
+            <div className="text-[12px] mb-2 space-y-0.5 border-b border-slate-700 pb-1.5">
               <div className="text-emerald-300">Frame: {hoverRow.nested.frame}</div>
               <div className="text-amber-300">Diegesis: {hoverRow.nested.diegetic}</div>
-              <div className="text-slate-500 italic">Retrospective flashback — nested timeline</div>
+              <div className="text-slate-400 italic">Retrospective flashback — nested timeline</div>
             </div>
           )}
           <ul className="text-xs space-y-0.5">

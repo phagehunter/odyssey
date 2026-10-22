@@ -1,27 +1,4 @@
-/** Short editorial titles for the 24 books, used by the playback overlay. */
-export const BOOK_TITLES: Record<number, string> = {
-  1: 'Athena Rouses Telemachus',
-  2: 'The Assembly at Ithaca',
-  3: 'Nestor at Pylos',
-  4: 'Menelaus & Helen at Sparta',
-  5: "Calypso's Island",
-  6: 'Nausicaa at the River',
-  7: 'The Court of Alcinous',
-  8: 'The Songs of Demodocus',
-  9: 'The Cyclops',
-  10: 'Aeolus, the Giants & Circe',
-  11: 'The Land of the Dead',
-  12: 'Sirens, Scylla & the Cattle of the Sun',
-  13: 'Return to Ithaca',
-  14: "Eumaeus' Hut",
-  15: 'Telemachus Sails Home',
-  16: 'Father & Son',
-  17: 'The Beggar in the Hall',
-  18: 'The Boxing Match',
-  19: 'Penelope & the Scar',
-  20: 'Omens Gather',
-  21: 'The Contest of the Bow',
-  22: 'The Slaying of the Suitors',
-  23: 'The Bed-Test Reunion',
-  24: 'Peace at Ithaca',
-};
+import raw from '../../data/book-titles.json';
+
+/** Short editorial title per book, from data/book-titles.json. */
+export const BOOK_TITLES: Record<number, string> = Object.fromEntries(Object.entries(raw).map(([k, v]) => [Number(k), v as string]));

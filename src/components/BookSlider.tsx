@@ -42,7 +42,7 @@ export default function BookSlider() {
           aria-label="Last book"
         />
         {/* tick labels */}
-        <div className="absolute -bottom-1.5 left-0 right-0 flex justify-between text-[9px] text-slate-500 pointer-events-none">
+        <div className="absolute -bottom-1.5 left-0 right-0 flex justify-between text-[12px] text-slate-400 pointer-events-none">
           {[1, 6, 12, 18, 24].map((b) => (
             <span key={b}>{b}</span>
           ))}

@@ -17,6 +17,24 @@ const DEFAULT_SHEET_PCT = 46;
 
 const maxWidth = () => Math.round(window.innerWidth * 0.72);
 
+/** localStorage can throw (private mode, blocked storage); never let a preference break the page. */
+const store = {
+  get: (k: string): string | null => {
+    try {
+      return localStorage.getItem(k);
+    } catch {
+      return null;
+    }
+  },
+  set: (k: string, v: string) => {
+    try {
+      localStorage.setItem(k, v);
+    } catch {
+      /* ignore */
+    }
+  },
+};
+
 /**
  * Reading panel, responsive:
  *  · Desktop (≥768px): right sidebar — drag the left edge to resize
@@ -29,13 +47,13 @@ export default function SidePanel() {
   const [collapsed, setCollapsed] = useState(false);
   const [isMobile, setIsMobile] = useState(() => window.matchMedia('(max-width: 767px)').matches);
   const [width, setWidth] = useState(() => {
-    const saved = Number(localStorage.getItem(STORAGE_KEY));
+    const saved = Number(store.get(STORAGE_KEY));
     return saved >= MIN_WIDTH ? Math.min(saved, maxWidth()) : DEFAULT_WIDTH;
   });
   const widthRef = useRef(width);
   widthRef.current = width;
   const [sheetPct, setSheetPct] = useState(() => {
-    const s = Number(localStorage.getItem(SHEET_KEY));
+    const s = Number(store.get(SHEET_KEY));
     return s >= 25 && s <= 85 ? s : DEFAULT_SHEET_PCT;
   });
   const sheetRef = useRef(sheetPct);
@@ -74,7 +92,7 @@ export default function SidePanel() {
       target.removeEventListener('pointermove', move);
       target.removeEventListener('pointerup', up);
       target.removeEventListener('pointercancel', up);
-      localStorage.setItem(SHEET_KEY, String(Math.round(sheetRef.current)));
+      store.set(SHEET_KEY, String(Math.round(sheetRef.current)));
     };
     target.addEventListener('pointermove', move);
     target.addEventListener('pointerup', up);
@@ -92,7 +110,7 @@ export default function SidePanel() {
       window.removeEventListener('mouseup', up);
       document.body.style.cursor = '';
       document.body.style.userSelect = '';
-      localStorage.setItem(STORAGE_KEY, String(widthRef.current));
+      store.set(STORAGE_KEY, String(widthRef.current));
     };
     window.addEventListener('mousemove', move);
     window.addEventListener('mouseup', up);
@@ -107,7 +125,7 @@ export default function SidePanel() {
         <aside className="w-full shrink-0 border-t border-slate-800 bg-slate-950/90">
           <button
             onClick={() => setCollapsed(false)}
-            className="w-full py-2.5 text-[11px] uppercase tracking-widest text-slate-400 hover:text-emerald-300 flex items-center justify-center gap-2"
+            className="w-full py-2.5 text-[12px] uppercase tracking-widest text-slate-400 hover:text-emerald-300 flex items-center justify-center gap-2"
             aria-label="Open reading panel"
           >
             <span className="text-sm leading-none">⌃</span> Commentary · Text
@@ -129,18 +147,20 @@ export default function SidePanel() {
           onPointerDown={startSheetDrag}
           onDoubleClick={() => {
             setSheetPct(DEFAULT_SHEET_PCT);
-            localStorage.setItem(SHEET_KEY, String(DEFAULT_SHEET_PCT));
+            store.set(SHEET_KEY, String(DEFAULT_SHEET_PCT));
           }}
           className="w-full pt-1.5 pb-1 cursor-row-resize touch-none flex justify-center shrink-0"
         >
           <div className="w-10 h-1 rounded-full bg-slate-600" />
         </div>
-        <div className="flex items-center gap-1 px-3 pb-1.5 border-b border-slate-800">
+        <div role="tablist" aria-label="Reading panel" className="flex items-center gap-1 px-3 pb-1.5 border-b border-slate-800">
           {TABS.map((t) => (
             <button
               key={t.id}
+              role="tab"
+              aria-selected={panelTab === t.id}
               onClick={() => setPanelTab(t.id)}
-              className={`px-3 py-1 rounded-md text-sm transition-colors ${
+              className={`px-3 py-1.5 min-h-[40px] rounded-md text-sm transition-colors duration-150 ${
                 panelTab === t.id
                   ? 'bg-emerald-900/40 text-emerald-200 border border-emerald-600/50'
                   : 'text-slate-400 hover:text-slate-200 border border-transparent'
@@ -151,7 +171,7 @@ export default function SidePanel() {
           ))}
           <button
             onClick={() => setCollapsed(true)}
-            className="ml-auto text-slate-500 hover:text-slate-300 px-2 text-sm"
+            className="ml-auto text-slate-400 hover:text-slate-300 px-2 text-sm"
             title="Minimize panel"
             aria-label="Minimize panel"
           >
@@ -177,7 +197,7 @@ export default function SidePanel() {
         >
           ⟨
         </button>
-        <span className="mt-4 text-[10px] uppercase tracking-widest text-slate-500 [writing-mode:vertical-rl]">
+        <span className="mt-4 text-[12px] uppercase tracking-widest text-slate-400 [writing-mode:vertical-rl]">
           Commentary · Text
         </span>
       </aside>
@@ -198,19 +218,21 @@ export default function SidePanel() {
         onMouseDown={startDrag}
         onDoubleClick={() => {
           setWidth(DEFAULT_WIDTH);
-          localStorage.setItem(STORAGE_KEY, String(DEFAULT_WIDTH));
+          store.set(STORAGE_KEY, String(DEFAULT_WIDTH));
         }}
         className="absolute left-0 top-0 bottom-0 w-2 -ml-1 z-20 cursor-col-resize group"
       >
         <div className="absolute left-1 top-0 bottom-0 w-[3px] bg-transparent group-hover:bg-emerald-500/60 group-active:bg-emerald-400 transition-colors" />
       </div>
 
-      <div className="flex items-center gap-1 px-3 py-2 border-b border-slate-800">
+      <div role="tablist" aria-label="Reading panel" className="flex items-center gap-1 px-3 py-2 border-b border-slate-800">
         {TABS.map((t) => (
           <button
             key={t.id}
+            role="tab"
+            aria-selected={panelTab === t.id}
             onClick={() => setPanelTab(t.id)}
-            className={`px-3 py-1 rounded-md text-sm transition-colors ${
+            className={`px-3 py-1.5 min-h-[40px] rounded-md text-sm transition-colors duration-150 ${
               panelTab === t.id
                 ? 'bg-emerald-900/40 text-emerald-200 border border-emerald-600/50'
                 : 'text-slate-400 hover:text-slate-200 border border-transparent'
@@ -221,7 +243,7 @@ export default function SidePanel() {
         ))}
         <button
           onClick={() => setCollapsed(true)}
-          className="ml-auto text-slate-500 hover:text-slate-300 px-1.5"
+          className="ml-auto text-slate-400 hover:text-slate-300 px-1.5"
           title="Collapse panel"
           aria-label="Collapse panel"
         >

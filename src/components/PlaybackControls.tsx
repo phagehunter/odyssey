@@ -29,7 +29,7 @@ export default function PlaybackControls() {
           <span className="text-sm text-slate-100 font-semibold whitespace-nowrap">
             {active ? `Book ${playBook}` : 'Play the epic'}
           </span>
-          <span className="hidden sm:inline text-[11px] text-slate-400 truncate">
+          <span className="hidden sm:inline text-[12px] text-slate-400 truncate">
             {active ? BOOK_TITLES[playBook!] : 'watch it unfold book by book'}
           </span>
         </div>
@@ -42,7 +42,7 @@ export default function PlaybackControls() {
       </div>
 
       {/* Mode toggle (hidden on phones — Growing is the default) */}
-      <div className="hidden sm:flex rounded-md overflow-hidden border border-slate-700 text-[11px]">
+      <div className="hidden sm:flex rounded-md overflow-hidden border border-slate-700 text-[12px]">
         {(
           [
             ['cumulative', 'Growing'],

@@ -28,3 +28,11 @@ Source: https://github.com/phagehunter/odyssey
 - Author: Curtis Hoffmann, https://curtishoffmann.com/
 - Issues: https://github.com/phagehunter/odyssey/issues
 - Sitemap: https://curtishoffmann.com/odyssey/sitemap.xml
+
+## Plain pages (no JavaScript needed)
+
+- https://curtishoffmann.com/odyssey/books/ : the 24 books, each with Butler's full text, its cited scenes, places and focalization
+- https://curtishoffmann.com/odyssey/characters/ : 53 characters and groups with epithets and every cited scene
+- https://curtishoffmann.com/odyssey/places/ : 17 places with status (historical, contested, mythological) and events
+- https://curtishoffmann.com/odyssey/notes/ : Samuel Butler's footnotes to his translation
+- Text source: Project Gutenberg ebook #1727 (public domain); data: CC BY 4.0; code: MIT

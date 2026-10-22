@@ -1,0 +1,15 @@
+{
+ "title": "The Odyssey",
+ "author": "Homer",
+ "translator": "Samuel Butler (1900)",
+ "source": "Project Gutenberg ebook #1727",
+ "url": "https://www.gutenberg.org/ebooks/1727",
+ "file": "text/pg1727.txt",
+ "bytes": 717784,
+ "sha256": "a6c3adec321585e9563e34093491c3bc3608505d166e391bb2bf8a6be1830b69",
+ "license": "Public domain in the United States; Project Gutenberg License for the ebook file",
+ "books": 24,
+ "words": 117042,
+ "footnotes": 187,
+ "built": "2026-10-22"
+}

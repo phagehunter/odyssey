@@ -6,7 +6,9 @@
   "description": "Visual literary analysis of Homer's Odyssey — network dynamics, spatial topography, and narrative gravity",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "node scripts/validate-data.mjs && tsc && vite build && node scripts/prerender.mjs",
+    "text": "node scripts/build-text.mjs",
+    "validate": "node scripts/validate-data.mjs",
     "preview": "vite preview"
   },
   "dependencies": {
