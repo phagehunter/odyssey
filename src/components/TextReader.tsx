@@ -4,7 +4,7 @@ import { NAME_REGEX, NAME_TO_ID } from '../data/nameMap';
 import { BOOK_LINES } from '../data/bookLines';
 
 /** In-memory cache: each book is fetched at most once per session. */
-const bookCache = new Map<number, string[]>();
+const bookCache = new Map<number, { argument?: string; paragraphs: string[] }>();
 
 /** Character names become live links: hover spotlights the node in the
  *  network view; click flies the camera to it. */
@@ -43,8 +43,9 @@ function LinkedText({ text }: { text: string }) {
 export default function TextReader() {
   const { readerBook, readerLine, setReaderBook } = useFilters();
   const [paragraphs, setParagraphs] = useState<string[] | null>(
-    bookCache.get(readerBook) ?? null,
+    bookCache.get(readerBook)?.paragraphs ?? null,
   );
+  const [argument, setArgument] = useState<string | undefined>(bookCache.get(readerBook)?.argument);
   const [failed, setFailed] = useState(false);
   const [flashPara, setFlashPara] = useState<number | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -52,7 +53,8 @@ export default function TextReader() {
   useEffect(() => {
     let alive = true;
     if (bookCache.has(readerBook)) {
-      setParagraphs(bookCache.get(readerBook)!);
+      setParagraphs(bookCache.get(readerBook)!.paragraphs);
+      setArgument(bookCache.get(readerBook)!.argument);
       setFailed(false);
       return;
     }
@@ -63,9 +65,12 @@ export default function TextReader() {
         if (!r.ok) throw new Error(`HTTP ${r.status}`);
         return r.json();
       })
-      .then((d: { paragraphs: string[] }) => {
-        bookCache.set(readerBook, d.paragraphs);
-        if (alive) setParagraphs(d.paragraphs);
+      .then((d: { argument?: string; paragraphs: string[] }) => {
+        bookCache.set(readerBook, d);
+        if (alive) {
+          setParagraphs(d.paragraphs);
+          setArgument(d.argument);
+        }
       })
       .catch(() => alive && setFailed(true));
     return () => {
@@ -132,16 +137,17 @@ export default function TextReader() {
       {/* Text body — measure capped so wide panels stay comfortable to read */}
       <div ref={scrollRef} className="flex-1 overflow-y-auto px-5 py-4">
         <div className="max-w-[42rem] mx-auto">
-        <h3 className="font-display text-2xl text-sepia-200 mb-3 tracking-wide">
+        <h3 className="font-display text-2xl text-sepia-200 mb-1 tracking-wide">
           Book {readerBook}
         </h3>
+        {argument && <p className="text-[13px] uppercase tracking-wider text-slate-400 mb-3">{argument}</p>}
 
         {failed && (
           <p className="text-sm text-rose-300">
             Could not load the text for this book. Try reloading the page.
           </p>
         )}
-        {!failed && !paragraphs && <p className="text-sm text-slate-500 italic">Loading…</p>}
+        {!failed && !paragraphs && <p className="text-sm text-slate-400 italic">Loading…</p>}
 
         {paragraphs && (
           <div className="space-y-4">
@@ -160,22 +166,23 @@ export default function TextReader() {
         )}
 
         {/* Attribution & name key */}
-        <div className="mt-8 pt-4 border-t border-slate-800 text-[11px] text-slate-500 leading-relaxed space-y-2">
+        <div className="mt-8 pt-4 border-t border-slate-800 text-[12px] text-slate-400 leading-relaxed space-y-2">
           <p>
             <span className="text-emerald-400/80">Names are linked</span> — hover one to spotlight
             that character in the network view; click to fly the camera to their node.
           </p>
           <p>
-            Translation: Samuel Butler (1900), via the{' '}
+            Translation: Samuel Butler (1900), public domain, from{' '}
             <a
-              href="http://classics.mit.edu/Homer/odyssey.html"
+              href="https://www.gutenberg.org/ebooks/1727"
               target="_blank"
               rel="noreferrer"
               className="text-slate-400 underline hover:text-slate-300"
             >
-              Internet Classics Archive
+              Project Gutenberg ebook #1727
             </a>
-            .
+            . Butler&apos;s own footnotes are collected on the{' '}
+            <a href="notes/" className="text-slate-400 underline hover:text-slate-300">notes page</a>.
           </p>
           <p>
             Butler uses Roman names: <b className="text-slate-400">Ulysses</b> = Odysseus ·{' '}

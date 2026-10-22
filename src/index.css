@@ -71,6 +71,11 @@ input[type='range'].book-thumb::-moz-range-thumb {
   cursor: ew-resize;
 }
 
+/* OpenStreetMap's standard tiles need no key; a CSS filter turns them into a dark basemap. */
+.leaflet-tile-pane .osm-dark {
+  filter: invert(1) hue-rotate(185deg) brightness(0.72) contrast(0.92) saturate(0.45);
+}
+
 /* ——— Leaflet dark-mode popup/tooltip overrides ——— */
 .leaflet-container {
   background: #020617;
@@ -121,5 +126,15 @@ input[type='range'].book-thumb::-moz-range-thumb {
   body,
   #root {
     height: 100dvh;
+  }
+}
+
+/* Respect the system's reduced-motion setting */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
   }
 }

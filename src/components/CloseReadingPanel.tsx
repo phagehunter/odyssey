@@ -26,7 +26,7 @@ function ThemeChips({ themes }: { themes: string[] }) {
       {themes.map((t) => (
         <span
           key={t}
-          className="text-[11px] px-1.5 py-0.5 rounded-full bg-sepia-700/30 text-sepia-300 border border-sepia-600/40"
+          className="text-[12px] px-1.5 py-0.5 rounded-full bg-sepia-700/30 text-sepia-300 border border-sepia-600/40"
         >
           {t}
         </span>
@@ -43,7 +43,7 @@ function CitationLink({ citation, book }: { citation?: string; book: number }) {
   return (
     <button
       onClick={() => openText(parsed?.book ?? book, parsed?.line)}
-      className="text-[11px] font-mono text-emerald-400/90 hover:text-emerald-300 hover:underline whitespace-nowrap"
+      className="text-[12px] font-mono text-emerald-400/90 hover:text-emerald-300 hover:underline whitespace-nowrap"
       title={
         parsed
           ? `Open Book ${parsed.book} near line ${parsed.line} (approximate — the prose translation is unnumbered)`
@@ -60,12 +60,12 @@ function InteractionCard({ i }: { i: Interaction }) {
     <div className="rounded-lg border border-slate-700 bg-slate-900/70 p-3 space-y-1.5">
       <div className="flex items-center justify-between gap-2">
         <span className="text-sm font-semibold text-emerald-300">Book {i.book}</span>
-        <span className="text-[11px] uppercase tracking-wider text-slate-400">
+        <span className="text-[12px] uppercase tracking-wider text-slate-400">
           {i.type.replace('_', ' ')} · weight {i.weight}
         </span>
       </div>
       {i.nested_narrative && (
-        <div className="text-[11px] text-amber-300 border border-amber-700/50 rounded px-1.5 py-0.5 inline-block">
+        <div className="text-[12px] text-amber-300 border border-amber-700/50 rounded px-1.5 py-0.5 inline-block">
           Nested narration (Apologoi flashback)
         </div>
       )}
@@ -96,7 +96,7 @@ export default function CloseReadingPanel() {
         <div className="flex justify-end -mb-1">
           <button
             onClick={() => setSelection(null)}
-            className="text-xs text-slate-500 hover:text-slate-300"
+            className="text-xs text-slate-400 hover:text-slate-300"
           >
             clear selection ✕
           </button>
@@ -116,7 +116,7 @@ export default function CloseReadingPanel() {
             Every citation links into the <b className="text-slate-100">Text</b> tab, where the
             full Butler translation can be read alongside the visualizations.
           </p>
-          <p className="text-[13px] text-slate-500 italic font-reading">
+          <p className="text-[13px] text-slate-400 italic font-reading">
             Distant reading finds the pattern; close reading gives it a voice — the two halves of
             this project are meant to be read against each other.
           </p>
@@ -128,7 +128,7 @@ export default function CloseReadingPanel() {
           <div className="font-display text-xl text-slate-50">
             {CHARACTER_BY_ID[selection.a]?.name} ↔ {CHARACTER_BY_ID[selection.b]?.name}
           </div>
-          <div className="text-xs text-slate-500 -mt-2">
+          <div className="text-xs text-slate-400 -mt-2">
             {selection.interactions.length} interaction
             {selection.interactions.length === 1 ? '' : 's'} in the selected window · combined
             weight {selection.interactions.reduce((s, i) => s + i.weight, 0)}
@@ -180,7 +180,7 @@ export default function CloseReadingPanel() {
         return (
           <>
             <div className="font-display text-xl text-slate-50">{loc.name}</div>
-            <div className="text-xs text-slate-500 -mt-2">
+            <div className="text-xs text-slate-400 -mt-2">
               {loc.status} · Books {loc.books.join(', ')}
             </div>
             {loc.note && (
@@ -219,7 +219,7 @@ export default function CloseReadingPanel() {
             <div className="flex items-baseline justify-between gap-2">
               <span className="font-display text-xl text-slate-50">{c.name}</span>
               <span
-                className="text-[11px] px-1.5 py-0.5 rounded-full border whitespace-nowrap"
+                className="text-[12px] px-1.5 py-0.5 rounded-full border whitespace-nowrap"
                 style={{ color: ALIGNMENT_COLORS[c.alignment], borderColor: ALIGNMENT_COLORS[c.alignment] }}
               >
                 {c.type} · {c.alignment}
@@ -237,7 +237,7 @@ export default function CloseReadingPanel() {
               </div>
             )}
             {c.note && <p className="text-[13px] text-slate-400">{c.note}</p>}
-            <div className="text-[11px] uppercase tracking-widest text-slate-500 pt-1">
+            <div className="text-[12px] uppercase tracking-widest text-slate-400 pt-1">
               All recorded interactions ({involved.length})
             </div>
             {involved.map((i, idx) => (

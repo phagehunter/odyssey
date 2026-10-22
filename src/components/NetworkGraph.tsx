@@ -42,6 +42,7 @@ export default function NetworkGraph() {
   const { bookRange, enabledGroups, setSelection, highlight } = useFilters();
   const { ref, width, height } = useElementSize<HTMLDivElement>();
   const [hoverNode, setHoverNode] = useState<GraphNode | null>(null);
+  const [showTable, setShowTable] = useState(false);
   const mousePos = useRef({ x: 0, y: 0 });
   const fgRef = useRef<any>(null);
   // Persist node objects across filter changes so the layout doesn't reset on every slider tick.
@@ -214,12 +215,61 @@ export default function NetworkGraph() {
   return (
     <div
       ref={ref}
+      role="region"
+      aria-label="Force-directed graph of character interactions in the selected books; the table view gives the same data as text"
       className="relative w-full h-full overflow-hidden"
       onMouseMove={(e) => {
         const rect = e.currentTarget.getBoundingClientRect();
         mousePos.current = { x: e.clientX - rect.left, y: e.clientY - rect.top };
       }}
     >
+      {/* Text alternative: the same interactions as a sortable-by-book table */}
+      <button
+        type="button"
+        onClick={() => setShowTable((v) => !v)}
+        aria-pressed={showTable}
+        className="absolute top-3 right-3 z-40 min-h-[40px] px-3 py-1.5 rounded-md border border-slate-700 bg-slate-900/90 text-[12px] text-slate-200 hover:border-emerald-500 transition-colors duration-150"
+      >
+        {showTable ? 'Show graph' : 'Show as table'}
+      </button>
+
+      {showTable && (
+        <div className="absolute inset-0 z-30 overflow-auto bg-slate-950 p-4 pt-14" aria-label="Interactions in the selected books, as a table">
+          <table className="w-full text-[13px] text-slate-200">
+            <caption className="text-left text-slate-400 mb-2">
+              {filteredInteractions.length} interactions in Books {bookRange[0]}–{bookRange[1]} for the enabled groups, in book order.
+            </caption>
+            <thead>
+              <tr className="text-left text-slate-400 border-b border-slate-700">
+                <th className="py-1.5 pr-3 font-semibold">Book</th>
+                <th className="py-1.5 pr-3 font-semibold">Between</th>
+                <th className="py-1.5 pr-3 font-semibold">Type</th>
+                <th className="py-1.5 pr-3 font-semibold text-right">Weight</th>
+                <th className="py-1.5 font-semibold">Summary and citation</th>
+              </tr>
+            </thead>
+            <tbody>
+              {[...filteredInteractions]
+                .sort((a, b) => a.book - b.book)
+                .map((i, idx) => (
+                  <tr key={idx} className="border-b border-slate-800 align-top">
+                    <td className="py-1.5 pr-3 tabular-nums">{i.book}</td>
+                    <td className="py-1.5 pr-3">
+                      {CHARACTER_BY_ID[i.source]?.name} and {CHARACTER_BY_ID[i.target]?.name}
+                    </td>
+                    <td className="py-1.5 pr-3">{i.type.replace('_', ' ')}</td>
+                    <td className="py-1.5 pr-3 tabular-nums text-right">{i.weight}</td>
+                    <td className="py-1.5">
+                      {i.summary}
+                      {i.citation && <span className="text-slate-400"> ({i.citation})</span>}
+                    </td>
+                  </tr>
+                ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
       {width > 0 && height > 0 && (
         <ForceGraph2D
           ref={fgRef}
@@ -266,10 +316,10 @@ export default function NetworkGraph() {
 
       {/* Legend (hidden when the view is too narrow to share the floor with the player) */}
       <div
-        className="absolute bottom-3 left-3 bg-slate-900/85 border border-slate-700 rounded-lg px-3 py-2 text-[11px] space-y-1 pointer-events-none max-w-[220px]"
+        className="absolute bottom-3 left-3 bg-slate-900/85 border border-slate-700 rounded-lg px-3 py-2 text-[12px] space-y-1 pointer-events-none max-w-[220px]"
         style={{ display: width < 900 ? 'none' : undefined }}
       >
-        <div className="text-slate-400 uppercase tracking-widest text-[9px] mb-1">Alignment</div>
+        <div className="text-slate-400 uppercase tracking-widest text-[12px] mb-1">Alignment</div>
         <div className="grid grid-cols-2 gap-x-3 gap-y-0.5">
           {Object.entries(ALIGNMENT_COLORS).map(([a, c]) => (
             <span key={a} className="flex items-center gap-1.5 text-slate-300">
@@ -297,7 +347,7 @@ export default function NetworkGraph() {
           <div className="flex items-baseline justify-between gap-2">
             <span className="font-display text-base text-sepia-200">{hoverNode.char.name}</span>
             <span
-              className="text-[10px] px-1.5 py-0.5 rounded-full border"
+              className="text-[12px] px-1.5 py-0.5 rounded-full border"
               style={{
                 color: ALIGNMENT_COLORS[hoverNode.char.alignment],
                 borderColor: ALIGNMENT_COLORS[hoverNode.char.alignment],
@@ -330,7 +380,7 @@ export default function NetworkGraph() {
           </div>
           {hoverConnections.length > 0 && (
             <div className="mt-2 pt-1.5 border-t border-slate-700">
-              <div className="text-[10px] uppercase tracking-widest text-slate-500 mb-1">
+              <div className="text-[12px] uppercase tracking-widest text-slate-400 mb-1">
                 Connections (by frequency)
               </div>
               <ul className="text-xs space-y-0.5">
@@ -343,13 +393,13 @@ export default function NetworkGraph() {
                       />
                       {char.name}
                     </span>
-                    <span className="text-slate-500 tabular-nums">{w}</span>
+                    <span className="text-slate-400 tabular-nums">{w}</span>
                   </li>
                 ))}
               </ul>
             </div>
           )}
-          <div className="mt-1.5 text-[10px] text-slate-500">
+          <div className="mt-1.5 text-[12px] text-slate-400">
             Click node for full card · click an edge for close reading
           </div>
         </div>
