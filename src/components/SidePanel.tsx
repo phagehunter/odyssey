@@ -21,14 +21,14 @@ const maxWidth = () => Math.round(window.innerWidth * 0.72);
 const store = {
   get: (k: string): string | null => {
     try {
-      return store.get(k);
+      return localStorage.getItem(k);
     } catch {
       return null;
     }
   },
   set: (k: string, v: string) => {
     try {
-      store.set(k, v);
+      localStorage.setItem(k, v);
     } catch {
       /* ignore */
     }
